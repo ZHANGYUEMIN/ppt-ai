@@ -6,6 +6,8 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: ['main', 'master']
+  # 在 Actions 页可手动「Run workflow」，无需再推代码
+  workflow_dispatch:
 
 permissions:
   contents: read
