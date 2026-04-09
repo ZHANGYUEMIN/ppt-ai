@@ -1,11 +1,14 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
-// 本地 / 离线：不设环境变量时为 ./ 便于 file:// 打开
-// GitHub Actions 会设置 VITE_BASE_URL（见 .github/workflows/deploy-pages.yml）
-const base = process.env.VITE_BASE_URL ?? './'
-
-export default defineConfig({
+// dev：固定用根路径，避免本机误设 VITE_BASE_URL 导致地址难记、资源路径异常
+// build：GitHub Actions 会设 VITE_BASE_URL；本地 build 未设时仍为 ./
+export default defineConfig(({ command }) => ({
   plugins: [vue()],
-  base,
-})
+  base: command === 'serve' ? '/' : process.env.VITE_BASE_URL ?? './',
+  server: {
+    port: 5173,
+    strictPort: false,
+    host: true,
+  },
+}))
