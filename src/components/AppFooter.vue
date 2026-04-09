@@ -154,9 +154,10 @@ const year = new Date().getFullYear()
   background-position: 0% 50%;
   -webkit-background-clip: text;
   background-clip: text;
+  /* 与 color:transparent 配合；勿在文字上叠 filter，否则会破坏 clip，整格变成色条 */
+  -webkit-text-fill-color: transparent;
   color: transparent;
   animation: footer-rgb-flow 6s linear infinite;
-  filter: drop-shadow(0 0 14px rgba(255, 255, 255, 0.12));
 }
 @keyframes footer-rgb-flow {
   0% {
@@ -169,9 +170,10 @@ const year = new Date().getFullYear()
 @media (prefers-reduced-motion: reduce) {
   .footer__rgb {
     animation: none;
-    filter: none;
     background: linear-gradient(110deg, #34c759, #007aff, #af52de);
     background-size: 100% 100%;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
   }
 }
 @media (max-width: 720px) {
