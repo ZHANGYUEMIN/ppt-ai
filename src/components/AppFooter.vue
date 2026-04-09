@@ -34,31 +34,24 @@
         aria-label="HAPPY Games"
       >
         <defs>
+          <!-- 流动用 CSS transform 驱动（SMIL 在 Chromium 常不生效；勿用 v-if 绑动画） -->
           <linearGradient
+            ref="rgbGradientEl"
             id="footerHappyRgb"
             gradientUnits="userSpaceOnUse"
-            x1="-200"
+            x1="-320"
             y1="0"
-            x2="540"
+            x2="660"
             y2="0"
           >
             <stop offset="0%" stop-color="#ff0066" />
-            <stop offset="16.66%" stop-color="#ffaa00" />
-            <stop offset="33.33%" stop-color="#eeff00" />
-            <stop offset="50%" stop-color="#00ff88" />
-            <stop offset="66.66%" stop-color="#00ddff" />
-            <stop offset="83.33%" stop-color="#6644ff" />
+            <stop offset="14%" stop-color="#ffaa00" />
+            <stop offset="28%" stop-color="#eeff00" />
+            <stop offset="42%" stop-color="#00ff88" />
+            <stop offset="56%" stop-color="#00ddff" />
+            <stop offset="70%" stop-color="#6644ff" />
+            <stop offset="84%" stop-color="#ff00aa" />
             <stop offset="100%" stop-color="#ff0066" />
-            <animateTransform
-              v-if="!reduceMotion"
-              attributeName="gradientTransform"
-              attributeType="XML"
-              type="translate"
-              from="0 0"
-              to="220 0"
-              dur="6s"
-              repeatCount="indefinite"
-            />
           </linearGradient>
         </defs>
         <text
@@ -88,21 +81,51 @@ defineProps({
 })
 
 const year = new Date().getFullYear()
-const reduceMotion = ref(false)
+
+/** rAF 驱动渐变平移，避免 SMIL/CSS 在部分内核上不动 */
+const rgbGradientEl = ref(null)
+let rafId = 0
+const PERIOD_MS = 5500
+const AMP = 150
+let tStart = 0
 let mq
 
-function syncReduce() {
-  reduceMotion.value = mq?.matches ?? false
+function setGradientX(x) {
+  const el = rgbGradientEl.value ?? document.getElementById('footerHappyRgb')
+  if (el) el.setAttribute('gradientTransform', `translate(${x.toFixed(1)} 0)`)
+}
+
+function tick(now) {
+  if (mq?.matches) {
+    setGradientX(0)
+    return
+  }
+  if (!tStart) tStart = now
+  const phase = ((now - tStart) % PERIOD_MS) / PERIOD_MS
+  const x = -AMP + phase * (AMP * 2)
+  setGradientX(x)
+  rafId = requestAnimationFrame(tick)
+}
+
+function restartLoop() {
+  cancelAnimationFrame(rafId)
+  tStart = 0
+  if (mq?.matches) {
+    setGradientX(0)
+    return
+  }
+  rafId = requestAnimationFrame(tick)
 }
 
 onMounted(() => {
   mq = window.matchMedia('(prefers-reduced-motion: reduce)')
-  syncReduce()
-  mq.addEventListener('change', syncReduce)
+  restartLoop()
+  mq.addEventListener('change', restartLoop)
 })
 
 onUnmounted(() => {
-  mq?.removeEventListener('change', syncReduce)
+  mq?.removeEventListener('change', restartLoop)
+  cancelAnimationFrame(rafId)
 })
 </script>
 
@@ -205,6 +228,7 @@ onUnmounted(() => {
   width: min(340px, 92vw);
   height: auto;
   vertical-align: middle;
+  overflow: visible;
 }
 @media (max-width: 720px) {
   .footer__grid {
