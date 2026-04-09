@@ -23,14 +23,64 @@
         </div>
       </div>
       <p class="footer__copy">© {{ year }} AI PPT 课件工具库 · 教育场景信息导航</p>
-      <p class="footer__credit">
-        <span class="footer__rgb" aria-label="HAPPY Games">HAPPY Games</span>
-      </p>
+    </div>
+    <!-- 放在 glass-panel 外：backdrop-filter 会破坏子元素的 background-clip:text，易变成色条 -->
+    <div class="footer__credit">
+      <svg
+        class="footer__rgb-svg"
+        viewBox="0 0 340 40"
+        xmlns="http://www.w3.org/2000/svg"
+        role="img"
+        aria-label="HAPPY Games"
+      >
+        <defs>
+          <linearGradient
+            id="footerHappyRgb"
+            gradientUnits="userSpaceOnUse"
+            x1="-200"
+            y1="0"
+            x2="540"
+            y2="0"
+          >
+            <stop offset="0%" stop-color="#ff0066" />
+            <stop offset="16.66%" stop-color="#ffaa00" />
+            <stop offset="33.33%" stop-color="#eeff00" />
+            <stop offset="50%" stop-color="#00ff88" />
+            <stop offset="66.66%" stop-color="#00ddff" />
+            <stop offset="83.33%" stop-color="#6644ff" />
+            <stop offset="100%" stop-color="#ff0066" />
+            <animateTransform
+              v-if="!reduceMotion"
+              attributeName="gradientTransform"
+              attributeType="XML"
+              type="translate"
+              from="0 0"
+              to="220 0"
+              dur="6s"
+              repeatCount="indefinite"
+            />
+          </linearGradient>
+        </defs>
+        <text
+          x="170"
+          y="26"
+          text-anchor="middle"
+          dominant-baseline="middle"
+          font-family="system-ui, -apple-system, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif"
+          font-size="18"
+          font-weight="700"
+          letter-spacing="0.14em"
+          fill="url(#footerHappyRgb)"
+        >
+          HAPPY Games
+        </text>
+      </svg>
     </div>
   </footer>
 </template>
 
 <script setup>
+import { ref, onMounted, onUnmounted } from 'vue'
 import { DATA_UPDATED_AT } from '../data/tools.js'
 
 defineProps({
@@ -38,6 +88,22 @@ defineProps({
 })
 
 const year = new Date().getFullYear()
+const reduceMotion = ref(false)
+let mq
+
+function syncReduce() {
+  reduceMotion.value = mq?.matches ?? false
+}
+
+onMounted(() => {
+  mq = window.matchMedia('(prefers-reduced-motion: reduce)')
+  syncReduce()
+  mq.addEventListener('change', syncReduce)
+})
+
+onUnmounted(() => {
+  mq?.removeEventListener('change', syncReduce)
+})
 </script>
 
 <style scoped>
@@ -129,52 +195,16 @@ const year = new Date().getFullYear()
   color: var(--text3);
 }
 .footer__credit {
-  margin: 14px 0 0;
+  margin: 16px auto 0;
+  padding: 0 var(--section-x);
+  max-width: var(--content-max);
   text-align: center;
 }
-.footer__rgb {
+.footer__rgb-svg {
   display: inline-block;
-  font-size: 1.05rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: none;
-  /* 宽幅渐变 + 位移动画 = 文字内 RGB 持续流动 */
-  background: linear-gradient(
-    110deg,
-    #ff0066 0%,
-    #ffaa00 14%,
-    #eeff00 28%,
-    #00ff88 42%,
-    #00ddff 56%,
-    #6644ff 70%,
-    #ff00aa 84%,
-    #ff0066 100%
-  );
-  background-size: 320% 100%;
-  background-position: 0% 50%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  /* 与 color:transparent 配合；勿在文字上叠 filter，否则会破坏 clip，整格变成色条 */
-  -webkit-text-fill-color: transparent;
-  color: transparent;
-  animation: footer-rgb-flow 6s linear infinite;
-}
-@keyframes footer-rgb-flow {
-  0% {
-    background-position: 0% 50%;
-  }
-  100% {
-    background-position: 100% 50%;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .footer__rgb {
-    animation: none;
-    background: linear-gradient(110deg, #34c759, #007aff, #af52de);
-    background-size: 100% 100%;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
-  }
+  width: min(340px, 92vw);
+  height: auto;
+  vertical-align: middle;
 }
 @media (max-width: 720px) {
   .footer__grid {
