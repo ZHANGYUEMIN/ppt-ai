@@ -24,56 +24,15 @@
       </div>
       <p class="footer__copy">© {{ year }} AI PPT 课件工具库 · 教育场景信息导航</p>
     </div>
-    <!-- 放在 glass-panel 外：backdrop-filter 会破坏子元素的 background-clip:text，易变成色条 -->
+    <!-- 玻璃外 + rAF 改 background-position：不依赖 SVG gradientTransform / CSS @keyframes -->
     <div class="footer__credit">
-      <svg
-        class="footer__rgb-svg"
-        viewBox="0 0 340 40"
-        xmlns="http://www.w3.org/2000/svg"
-        role="img"
-        aria-label="HAPPY Games"
-      >
-        <defs>
-          <!-- 流动用 CSS transform 驱动（SMIL 在 Chromium 常不生效；勿用 v-if 绑动画） -->
-          <linearGradient
-            ref="rgbGradientEl"
-            id="footerHappyRgb"
-            gradientUnits="userSpaceOnUse"
-            x1="-320"
-            y1="0"
-            x2="660"
-            y2="0"
-          >
-            <stop offset="0%" stop-color="#ff0066" />
-            <stop offset="14%" stop-color="#ffaa00" />
-            <stop offset="28%" stop-color="#eeff00" />
-            <stop offset="42%" stop-color="#00ff88" />
-            <stop offset="56%" stop-color="#00ddff" />
-            <stop offset="70%" stop-color="#6644ff" />
-            <stop offset="84%" stop-color="#ff00aa" />
-            <stop offset="100%" stop-color="#ff0066" />
-          </linearGradient>
-        </defs>
-        <text
-          x="170"
-          y="26"
-          text-anchor="middle"
-          dominant-baseline="middle"
-          font-family="system-ui, -apple-system, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif"
-          font-size="18"
-          font-weight="700"
-          letter-spacing="0.14em"
-          fill="url(#footerHappyRgb)"
-        >
-          HAPPY Games
-        </text>
-      </svg>
+      <span ref="happyFlowEl" class="footer__happy-flow">HAPPY Games</span>
     </div>
   </footer>
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, nextTick } from 'vue'
 import { DATA_UPDATED_AT } from '../data/tools.js'
 
 defineProps({
@@ -82,43 +41,54 @@ defineProps({
 
 const year = new Date().getFullYear()
 
-/** rAF 驱动渐变平移，避免 SMIL/CSS 在部分内核上不动 */
-const rgbGradientEl = ref(null)
+/** 每帧移动渐变位置，比 @keyframes / SVG 属性更不容易被系统或内核静默掉 */
+const happyFlowEl = ref(null)
 let rafId = 0
-const PERIOD_MS = 5500
-const AMP = 150
+const PERIOD_MS = 4800
 let tStart = 0
 let mq
+/** 地址后加 ?rgbflow=1 可强制流动（用于系统开了「减少动态效果」时自测） */
+let bypassReduce = false
 
-function setGradientX(x) {
-  const el = rgbGradientEl.value ?? document.getElementById('footerHappyRgb')
-  if (el) el.setAttribute('gradientTransform', `translate(${x.toFixed(1)} 0)`)
+function shouldReduceMotion() {
+  return (mq?.matches ?? false) && !bypassReduce
 }
 
 function tick(now) {
-  if (mq?.matches) {
-    setGradientX(0)
+  const el = happyFlowEl.value
+  if (!el) {
+    rafId = requestAnimationFrame(tick)
+    return
+  }
+  if (shouldReduceMotion()) {
+    el.style.backgroundPosition = '50% 50%'
     return
   }
   if (!tStart) tStart = now
   const phase = ((now - tStart) % PERIOD_MS) / PERIOD_MS
-  const x = -AMP + phase * (AMP * 2)
-  setGradientX(x)
+  el.style.backgroundPosition = `${(phase * 100).toFixed(2)}% 50%`
   rafId = requestAnimationFrame(tick)
 }
 
 function restartLoop() {
   cancelAnimationFrame(rafId)
   tStart = 0
-  if (mq?.matches) {
-    setGradientX(0)
+  const el = happyFlowEl.value
+  if (shouldReduceMotion() && el) {
+    el.style.backgroundPosition = '50% 50%'
     return
   }
   rafId = requestAnimationFrame(tick)
 }
 
-onMounted(() => {
+onMounted(async () => {
   mq = window.matchMedia('(prefers-reduced-motion: reduce)')
+  try {
+    bypassReduce = new URLSearchParams(window.location.search).get('rgbflow') === '1'
+  } catch {
+    bypassReduce = false
+  }
+  await nextTick()
   restartLoop()
   mq.addEventListener('change', restartLoop)
 })
@@ -222,13 +192,33 @@ onUnmounted(() => {
   padding: 0 var(--section-x);
   max-width: var(--content-max);
   text-align: center;
+  isolation: isolate;
 }
-.footer__rgb-svg {
+.footer__happy-flow {
   display: inline-block;
-  width: min(340px, 92vw);
-  height: auto;
-  vertical-align: middle;
-  overflow: visible;
+  font-size: 1.06rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  line-height: 1.4;
+  /* 宽幅渐变，由脚本改 background-position 产生流动 */
+  background-image: linear-gradient(
+    105deg,
+    #ff0066 0%,
+    #ffaa00 12%,
+    #eeff00 24%,
+    #00ff88 36%,
+    #00ddff 48%,
+    #6644ff 60%,
+    #ff00aa 76%,
+    #ff0066 100%
+  );
+  background-size: 320% 100%;
+  background-position: 0% 50%;
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
 }
 @media (max-width: 720px) {
   .footer__grid {
