@@ -24,7 +24,7 @@
       </div>
       <p class="footer__copy">© {{ year }} AI PPT 课件工具库 · 教育场景信息导航</p>
       <p class="footer__credit">
-        <span class="footer__rgb">HAPPY Games · 制作作者</span>
+        <span class="footer__rgb" aria-label="HAPPY Games">HAPPY Games</span>
       </p>
     </div>
   </footer>
@@ -131,29 +131,32 @@ const year = new Date().getFullYear()
 .footer__credit {
   margin: 14px 0 0;
   text-align: center;
-  font-size: 0.95rem;
-  font-weight: 650;
-  letter-spacing: 0.06em;
 }
 .footer__rgb {
   display: inline-block;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: none;
+  /* 宽幅渐变 + 位移动画 = 文字内 RGB 持续流动 */
   background: linear-gradient(
-    90deg,
-    #ff2d55,
-    #ff9500,
-    #ffcc00,
-    #34c759,
-    #00c7be,
-    #007aff,
-    #af52de,
-    #ff2d55
+    110deg,
+    #ff0066 0%,
+    #ffaa00 14%,
+    #eeff00 28%,
+    #00ff88 42%,
+    #00ddff 56%,
+    #6644ff 70%,
+    #ff00aa 84%,
+    #ff0066 100%
   );
-  background-size: 280% 100%;
+  background-size: 320% 100%;
+  background-position: 0% 50%;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  animation: footer-rgb-flow 10s linear infinite;
-  text-shadow: none;
+  animation: footer-rgb-flow 6s linear infinite;
+  filter: drop-shadow(0 0 14px rgba(255, 255, 255, 0.12));
 }
 @keyframes footer-rgb-flow {
   0% {
@@ -166,7 +169,8 @@ const year = new Date().getFullYear()
 @media (prefers-reduced-motion: reduce) {
   .footer__rgb {
     animation: none;
-    background: linear-gradient(90deg, #34c759, #007aff, #af52de);
+    filter: none;
+    background: linear-gradient(110deg, #34c759, #007aff, #af52de);
     background-size: 100% 100%;
   }
 }
