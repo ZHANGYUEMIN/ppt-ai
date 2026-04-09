@@ -1,5 +1,6 @@
 <template>
   <div class="page-wrap">
+    <a href="#main-content" class="skip-link">跳到主要内容</a>
     <div class="ambient" aria-hidden="true">
       <div class="ambient__blob ambient__blob--a" />
       <div class="ambient__blob ambient__blob--b" />
@@ -9,7 +10,7 @@
 
     <AppNav />
 
-    <main class="site-main">
+    <main id="main-content" class="site-main" tabindex="-1">
       <HeroSection :stats="stats" />
 
       <section id="browse" class="browse">
@@ -25,7 +26,6 @@
 
         <div v-else class="browse__inner">
           <div class="tools-bar glass-panel">
-            <TrafficLights />
             <div class="tools-bar__row">
               <h2 class="tools-bar__h">工具卡片</h2>
               <p class="tools-bar__count">共 {{ filteredTools.length }} 个工具</p>
@@ -74,7 +74,6 @@ import AppFooter from './components/AppFooter.vue'
 import BackToTop from './components/BackToTop.vue'
 import DetailDrawer from './components/DetailDrawer.vue'
 import SkeletonGrid from './components/SkeletonGrid.vue'
-import TrafficLights from './components/TrafficLights.vue'
 import { tools as allTools, DATA_UPDATED_AT } from './data/tools.js'
 import { filterTools, sortTools, computeStats } from './utils/filterTools.js'
 import { useFavorites } from './composables/useFavorites.js'
@@ -171,9 +170,6 @@ function onPickTool(id) {
   background: linear-gradient(180deg, var(--accent), var(--accent2));
   opacity: 0.7;
   pointer-events: none;
-}
-.tools-bar :deep(.traffic) {
-  padding-bottom: 6px;
 }
 .tools-bar__row {
   display: flex;

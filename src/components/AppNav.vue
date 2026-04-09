@@ -114,9 +114,21 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
   background: rgba(37, 99, 235, 0.06);
   border-color: rgba(37, 99, 235, 0.12);
 }
+.nav__link:focus-visible {
+  outline: none;
+  color: var(--text);
+  background: rgba(37, 99, 235, 0.1);
+  border-color: rgba(37, 99, 235, 0.35);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.22);
+}
 [data-theme='dark'] .nav__link:hover {
   background: rgba(255, 255, 255, 0.06);
   border-color: rgba(255, 255, 255, 0.08);
+}
+[data-theme='dark'] .nav__link:focus-visible {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.25);
 }
 @media (max-width: 720px) {
   .nav__inner {
