@@ -1,7 +1,6 @@
 <template>
   <footer id="about" class="footer">
     <div class="footer__panel glass-panel">
-      <TrafficLights />
       <div class="footer__grid">
         <div>
           <h2 class="footer__h">关于本站</h2>
@@ -29,7 +28,6 @@
 </template>
 
 <script setup>
-import TrafficLights from './TrafficLights.vue'
 import { DATA_UPDATED_AT } from '../data/tools.js'
 
 defineProps({
@@ -63,9 +61,6 @@ const year = new Date().getFullYear()
   max-width: var(--content-max);
   margin: 0 auto;
   padding: 26px 26px 22px;
-}
-.footer :deep(.traffic) {
-  padding-bottom: 8px;
 }
 .footer__grid {
   display: grid;

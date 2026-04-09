@@ -10,12 +10,13 @@
 .traffic {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 2px 0 10px;
+  gap: 5px;
+  padding: 0;
+  flex-shrink: 0;
 }
 .traffic__dot {
-  width: 10px;
-  height: 10px;
+  width: 9px;
+  height: 9px;
   border-radius: 50%;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.35),

@@ -1,7 +1,6 @@
 <template>
   <section class="filters">
     <div class="filters__panel glass-panel">
-      <TrafficLights />
       <h2 class="filters__h">搜索与筛选</h2>
       <p class="filters__sub">
         支持组合筛选：地区、类型、付费、访问条件、付款方式与语言。结果实时更新，便于备课场景快速收敛候选工具。
@@ -90,7 +89,6 @@
 </template>
 
 <script setup>
-import TrafficLights from './TrafficLights.vue'
 import GlassSelect from './GlassSelect.vue'
 import { PAYMENT_OPTIONS } from '../data/tools.js'
 
@@ -160,9 +158,6 @@ const sortOpts = [
   margin: 0 auto;
   padding: 22px 26px 22px;
   overflow: visible;
-}
-.filters :deep(.traffic) {
-  padding-bottom: 6px;
 }
 .filters__h {
   margin: 0 0 12px;

@@ -5,7 +5,6 @@
         <Transition name="drawer-slide">
           <aside v-if="tool" class="drawer glass-panel" role="dialog" aria-modal="true" :aria-label="tool.name">
             <div class="drawer__head">
-              <TrafficLights />
               <div class="drawer__top">
                 <h2 class="drawer__title">{{ tool.name }}</h2>
                 <p v-if="tool.englishName" class="drawer__en">{{ tool.englishName }}</p>
@@ -122,7 +121,6 @@
 
 <script setup>
 import { computed, watch, onUnmounted } from 'vue'
-import TrafficLights from './TrafficLights.vue'
 
 const props = defineProps({
   tool: { type: Object, default: null },
@@ -188,9 +186,6 @@ async function copyUrl() {
 .drawer__head {
   padding: 18px 22px 12px;
   border-bottom: 1px solid var(--stroke);
-}
-.drawer :deep(.traffic) {
-  padding-bottom: 4px;
 }
 .drawer__top {
   position: relative;

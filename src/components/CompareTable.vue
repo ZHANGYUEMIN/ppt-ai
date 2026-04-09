@@ -1,7 +1,6 @@
 <template>
   <section id="compare" class="compare">
     <div class="compare__panel glass-panel">
-      <TrafficLights />
       <h2 class="compare__h">对比表</h2>
       <p class="compare__sub">
         横向滚动查看完整字段。表头在滚动时保持固定，便于课堂与教研场景快速对照关键能力。
@@ -57,8 +56,6 @@
 </template>
 
 <script setup>
-import TrafficLights from './TrafficLights.vue'
-
 defineProps({
   tools: { type: Array, required: true },
 })
@@ -108,9 +105,6 @@ function shortUrl(u) {
   max-width: var(--content-max);
   margin: 0 auto;
   padding: 22px 24px 22px;
-}
-.compare :deep(.traffic) {
-  padding-bottom: 6px;
 }
 .compare__h {
   margin: 0 0 12px;

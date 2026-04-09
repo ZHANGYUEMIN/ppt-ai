@@ -1,7 +1,6 @@
 <template>
   <section id="top" class="hero">
     <div class="hero__panel glass-panel hero__panel--shine">
-      <TrafficLights />
       <p class="hero__eyebrow">全球教师与内容创作者的 AI 演示工具导航、对比与选型指南</p>
       <h1 class="hero__title">AI PPT 课件工具库</h1>
       <p class="hero__lead">
@@ -23,7 +22,6 @@
 
 <script setup>
 import { computed } from 'vue'
-import TrafficLights from './TrafficLights.vue'
 
 const props = defineProps({
   stats: { type: Object, required: true },
@@ -64,9 +62,6 @@ const statItems = computed(() => [
 }
 [data-theme='dark'] .hero__panel--shine::after {
   background: radial-gradient(circle, rgba(59, 130, 246, 0.14), transparent 65%);
-}
-.hero :deep(.traffic) {
-  padding-bottom: 10px;
 }
 .hero__eyebrow {
   margin: 0 0 12px;

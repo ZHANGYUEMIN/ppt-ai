@@ -1,7 +1,6 @@
 <template>
   <section id="recommend" class="rec">
     <div class="rec__panel glass-panel">
-      <TrafficLights />
       <h2 class="rec__h">不同用户怎么选</h2>
       <p class="rec__sub">
         下列方案用于缩小范围，仍建议结合本校网络、采购与课堂设备做最终确认。
@@ -31,7 +30,6 @@
 </template>
 
 <script setup>
-import TrafficLights from './TrafficLights.vue'
 import { RECOMMEND_SCENARIOS, tools } from '../data/tools.js'
 
 defineEmits(['pick-tool'])
@@ -52,9 +50,6 @@ function nameById(id) {
   max-width: var(--content-max);
   margin: 0 auto;
   padding: 24px 26px 22px;
-}
-.rec :deep(.traffic) {
-  padding-bottom: 6px;
 }
 .rec__h {
   margin: 0 0 12px;
