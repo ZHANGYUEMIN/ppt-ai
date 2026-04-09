@@ -23,6 +23,9 @@
         </div>
       </div>
       <p class="footer__copy">© {{ year }} AI PPT 课件工具库 · 教育场景信息导航</p>
+      <p class="footer__credit">
+        <span class="footer__rgb">HAPPY Games · 制作作者</span>
+      </p>
     </div>
   </footer>
 </template>
@@ -124,6 +127,48 @@ const year = new Date().getFullYear()
   border-top: 1px solid var(--stroke);
   font-size: 0.82rem;
   color: var(--text3);
+}
+.footer__credit {
+  margin: 14px 0 0;
+  text-align: center;
+  font-size: 0.95rem;
+  font-weight: 650;
+  letter-spacing: 0.06em;
+}
+.footer__rgb {
+  display: inline-block;
+  background: linear-gradient(
+    90deg,
+    #ff2d55,
+    #ff9500,
+    #ffcc00,
+    #34c759,
+    #00c7be,
+    #007aff,
+    #af52de,
+    #ff2d55
+  );
+  background-size: 280% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: footer-rgb-flow 10s linear infinite;
+  text-shadow: none;
+}
+@keyframes footer-rgb-flow {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .footer__rgb {
+    animation: none;
+    background: linear-gradient(90deg, #34c759, #007aff, #af52de);
+    background-size: 100% 100%;
+  }
 }
 @media (max-width: 720px) {
   .footer__grid {
